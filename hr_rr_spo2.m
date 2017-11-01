@@ -36,8 +36,12 @@ ir_valley_locs_count = length(ir_valley_locs);
 spo2_cal = zeros(ir_valley_locs_count-1, 1);
 heartrate = zeros(ir_valley_locs_count-1, 1);
 
+%calculate heart rate
+%hr_ir = bandp(ir,1,2,2/3,2.5,0.1,30,50);% bandpass 1HZ-2HZ
+%hr_ir = smooth(hr_ir);
+
 %calculate respiratory rate
-rr_ir = bandp(ir,1/6,1/3,0.1/8,2/3,0.1,30,50);% bandpass 1/6HZ-1/3HZ
+rr_ir = bandp(ir,1/6,1/3,0.01,2/3,0.1,30,50);% bandpass 1/6HZ-1/3HZ
 rr_ir = smooth(rr_ir);
 [rr_ir_high,rr_ir_locs] = findpeaks(rr_ir,1,'MinPeakDistance',150);
 findpeaks(rr_ir,1,'MinPeakDistance',150);
@@ -47,7 +51,7 @@ for i=1:1:rr_ir_locs_count-1
     resp_rate(i) = round(60 *50 /(rr_ir_locs(i+1) - rr_ir_locs(i)));
 end
 
-%use an_ratio betwen AC compoent of Ir & Red and DC compoent of Ir & Red for SPO2 
+%use an_ratio betwen AC component of Ir & Red and DC component of Ir & Red for SPO2 
 %calculate heartrate
 for i=1:1:ir_valley_locs_count-1
     %fitting a straight line
@@ -72,8 +76,13 @@ end
 %figure;
 %subplot(211);plot(spo2_cal);
 %subplot(212);plot(heartrate);
-figure;
-subplot(211);plot_fft(ir,50,1);
-subplot(212);plot_fft(rr_ir,50,1);
+%figure;
+%subplot(211);plot_fft(IR,50,1);grid on;title('Raw IR');
+%subplot(212);plot_fft(rr_ir,50,1);grid on;title('Respiratory Rate ir');
+%subplot(211);plot(IR(1:300));title('IR');
+%subplot(212);plot(ir(1:300));title('ir');
+%findpeaks(ir,1,'MinPeakDistance',25);
+%findpeaks(ir_n,1,'MinPeakDistance',25);title('Find Valleys');
+
 
 
